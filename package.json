@@ -1,0 +1,17 @@
+{
+  "name": "zeno_tunnel",
+  "version": "1.0.0",
+  "description": "Infinite descent tunnel visualization — Zeno's paradox made visceral",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "three": "^0.163.0"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0"
+  }
+}

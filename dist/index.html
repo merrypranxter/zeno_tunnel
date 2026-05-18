@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zeno Tunnel — Infinite Descent</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      background: #000; font-family: 'Courier New', monospace;
+    }
+    #canvas { display: block; width: 100vw; height: 100vh; }
+
+    /* HUD overlay */
+    #hud {
+      position: fixed; inset: 0; pointer-events: none;
+      color: #00ffcc; font-size: 13px;
+    }
+
+    /* Settings toggle button */
+    #settings-toggle {
+      position: fixed; top: 12px; right: 12px;
+      pointer-events: all; cursor: pointer;
+      background: rgba(0,0,0,0.75); border: 1px solid #00ffcc;
+      color: #00ffcc; font-size: 18px; width: 36px; height: 36px;
+      border-radius: 4px; display: flex; align-items: center; justify-content: center;
+    }
+    #settings-toggle:hover { background: rgba(0,255,204,0.15); }
+
+    /* Settings panel */
+    #settings-panel {
+      position: fixed; top: 56px; right: 12px;
+      pointer-events: all;
+      background: rgba(0,0,0,0.82); border: 1px solid #00ffcc44;
+      border-radius: 6px; padding: 14px 16px; width: 220px;
+      color: #ccc; font-size: 12px; line-height: 1.7;
+    }
+    #settings-panel label { display: block; margin-top: 10px; color: #00ffcc; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+    #settings-panel input[type=range] { width: 100%; accent-color: #00ffcc; }
+    #settings-panel select, #settings-panel button {
+      width: 100%; background: #111; border: 1px solid #00ffcc44;
+      color: #ccc; padding: 4px 6px; border-radius: 3px; font-family: inherit;
+    }
+    #settings-panel button { margin-top: 12px; cursor: pointer; color: #00ffcc; border-color: #00ffcc; }
+    #settings-panel button:hover { background: rgba(0,255,204,0.12); }
+    .row { display: flex; justify-content: space-between; align-items: center; }
+    .val { color: #fff; min-width: 32px; text-align: right; }
+    .radio-group { display: flex; flex-direction: column; gap: 2px; margin-top: 2px; }
+    .radio-group label { color: #ccc; text-transform: none; font-size: 12px; display: flex; align-items: center; gap: 6px; margin-top: 0; }
+    .radio-group input[type=radio] { accent-color: #00ffcc; }
+
+    /* Bottom info */
+    #info {
+      position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+      color: rgba(0,255,204,0.7); font-size: 12px; letter-spacing: 0.08em;
+      display: flex; gap: 24px;
+    }
+    #fps {
+      position: fixed; bottom: 14px; left: 14px;
+      color: rgba(255,255,255,0.4); font-size: 11px;
+    }
+    #title-badge {
+      position: fixed; top: 14px; left: 14px;
+      color: rgba(0,255,204,0.5); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/index-Dc9HB0Yl.js"></script>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <div id="hud">
+    <div id="title-badge">Zeno Tunnel</div>
+    <div id="fps">-- fps</div>
+    <div id="info">
+      <span id="depth-display">Depth: ×1.0</span>
+      <span id="level-display">Level: 0</span>
+    </div>
+  </div>
+
+  <button id="settings-toggle" title="Settings">⚙</button>
+
+  <div id="settings-panel">
+    <label>Speed <span class="val" id="speed-val">1.0</span></label>
+    <input type="range" id="speed" min="0.1" max="5.0" step="0.1" value="1.0" />
+
+    <label>Subdivision Ratio</label>
+    <div class="radio-group">
+      <label><input type="radio" name="ratio" value="0.5" checked /> Zeno (1/2)</label>
+      <label><input type="radio" name="ratio" value="0.618" /> Golden (1/φ)</label>
+      <label><input type="radio" name="ratio" value="0.333" /> Third (1/3)</label>
+    </div>
+
+    <label>Color Scheme</label>
+    <select id="colorscheme">
+      <option value="0">Cyberpunk</option>
+      <option value="1">Golden Hour</option>
+      <option value="2">Void</option>
+      <option value="3">Matrix</option>
+    </select>
+
+    <label>Twist <span class="val" id="twist-val">0.05</span></label>
+    <input type="range" id="twist" min="0.0" max="0.5" step="0.01" value="0.05" />
+
+    <label>FOV <span class="val" id="fov-val">1.2</span></label>
+    <input type="range" id="fov" min="0.5" max="2.0" step="0.1" value="1.2" />
+
+    <button id="pause">Pause</button>
+  </div>
+
+</body>
+</html>
