@@ -1,4 +1,4 @@
-export function setupUI(params) {
+export function setupUI(params, onTunnelSwitch) {
   document.getElementById('speed').addEventListener('input', e => {
     params.speed = parseFloat(e.target.value);
     document.getElementById('speed-val').textContent = params.speed.toFixed(1);
@@ -8,6 +8,11 @@ export function setupUI(params) {
     r.addEventListener('change', e => {
       params.subdivisionRatio = parseFloat(e.target.value);
     });
+  });
+
+  document.getElementById('tunneltype').addEventListener('change', e => {
+    params.tunnelType = parseInt(e.target.value);
+    if (typeof onTunnelSwitch === 'function') onTunnelSwitch(params.tunnelType);
   });
 
   document.getElementById('colorscheme').addEventListener('change', e => {

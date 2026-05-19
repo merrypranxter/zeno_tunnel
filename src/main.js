@@ -1,5 +1,9 @@
 import * as THREE from 'three';
-import ZenoTunnel from './ZenoTunnel.js';
+import ZenoTunnel        from './ZenoTunnel.js';
+import GoldenSpiralTunnel from './GoldenSpiralTunnel.js';
+import FractalTunnel      from './FractalTunnel.js';
+import HexTunnel          from './HexTunnel.js';
+import DrosteTunnel       from './DrosteTunnel.js';
 import { setupUI } from './ui.js';
 
 const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
@@ -10,9 +14,6 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-const tunnel = new ZenoTunnel(THREE);
-scene.add(tunnel.mesh);
-
 const params = {
   speed: 1.0,
   subdivisionRatio: 0.5,
@@ -20,14 +21,35 @@ const params = {
   twist: 0.05,
   fov: 1.2,
   paused: false,
+  tunnelType: 0,
 };
 
-setupUI(params);
+// Instantiate all tunnel types once; swap meshes on type change
+const tunnels = [
+  new ZenoTunnel(THREE),
+  new GoldenSpiralTunnel(THREE),
+  new FractalTunnel(THREE),
+  new HexTunnel(THREE),
+  new DrosteTunnel(THREE),
+];
+
+let activeTunnel = tunnels[0];
+scene.add(activeTunnel.mesh);
+
+function switchTunnel(index) {
+  scene.remove(activeTunnel.mesh);
+  activeTunnel = tunnels[index];
+  scene.add(activeTunnel.mesh);
+  const w = window.innerWidth, h = window.innerHeight;
+  activeTunnel.setSize(w, h);
+}
+
+setupUI(params, switchTunnel);
 
 function onResize() {
   const w = window.innerWidth, h = window.innerHeight;
   renderer.setSize(w, h);
-  tunnel.setSize(w, h);
+  activeTunnel.setSize(w, h);
 }
 window.addEventListener('resize', onResize);
 onResize();
@@ -51,9 +73,9 @@ function animate() {
   }
 
   if (!params.paused) {
-    tunnel.update(dt, params);
+    activeTunnel.update(dt, params);
 
-    const camZ = tunnel.uniforms.uTime.value * params.speed;
+    const camZ = activeTunnel.uniforms.uTime.value * params.speed;
     document.getElementById('depth-display').textContent =
       'Depth: ×' + Math.pow(2, parseFloat(Math.log2(camZ + 1).toFixed(1))).toFixed(1);
     document.getElementById('level-display').textContent =
